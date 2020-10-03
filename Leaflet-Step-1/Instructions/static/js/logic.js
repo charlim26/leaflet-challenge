@@ -117,11 +117,11 @@ function createMap(earthquakes) {
 
   var legend = L.control({ position: 'bottomright' });
 
-  legend.onAdd = function (myMap) {
+  legend.onAdd = function () {
 
     var div = L.DomUtil.create('div', 'info legend'),
       depth = [-10, 10, 30, 50, 70, 90];
-    labels = [];
+    
 
     // loop through our density intervals and generate a label with a colored square for each interval
     for (var i = 0; i < depth.length; i++) {
