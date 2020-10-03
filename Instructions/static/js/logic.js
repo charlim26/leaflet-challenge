@@ -37,7 +37,10 @@ function createFeatures(earthquakeData) {
           radius: markerSize(feature.properties.mag),
           fillColor: getColor(feature.geometry.coordinates[2]),
           fillOpacity: 5,
-          stroke: false
+          color: "#000000",
+          weight: 1,
+          opacity: 0.7,
+          stroke: true
         })
     }
   });
@@ -56,6 +59,16 @@ function createMap(earthquakes) {
     accessToken: API_KEY
   });
 
+  var streetmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+    attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
+    tileSize: 512,
+    maxZoom: 18,
+    zoomOffset: -1,
+    id: "mapbox/streets-v11",
+    accessToken: API_KEY
+  })
+
+
   var darkmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
     attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
     maxZoom: 18,
@@ -73,14 +86,14 @@ function createMap(earthquakes) {
   // Define a baseMaps object to hold our base layers
   var baseMaps = {
     "Light Map": lightmap,
+    "Street Map": streetmap,
     "Dark Map": darkmap,
     "Satelite Map": satellitemap
   };
 
   // Create overlay object to hold our overlay layer
   var overlayMaps = {
-    Earthquakes: earthquakes,
-    Techtonic_Plates: earthquakes
+    Earthquakes: earthquakes
   };
 
 
@@ -107,14 +120,13 @@ function createMap(earthquakes) {
   legend.onAdd = function (myMap) {
 
     var div = L.DomUtil.create('div', 'info legend'),
-      magnitude = [-10, 10, 30, 50, 70, 90];
+      depth = [-10, 10, 30, 50, 70, 90];
     labels = [];
 
     // loop through our density intervals and generate a label with a colored square for each interval
-    for (var i = 0; i < magnitude.length; i++) {
-      div.innerHTML +=
-        '<i style="background:' + getColor(magnitude[i] + 1) + '"></i> ' +
-        magnitude[i] + (magnitude[i + 1] ? '&ndash;' + magnitude[i + 1] + '<br>' : '+');
+    for (var i = 0; i < depth.length; i++) {
+      div.innerHTML += '<i style="background:' + getColor(depth[i] + 1) + '"></i> ' +
+        depth[i] + (depth[i + 1] ? '&ndash;' + depth[i + 1] + '<br>' : '+');
     }
 
     return div;
